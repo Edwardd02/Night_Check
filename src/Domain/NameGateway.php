@@ -1,5 +1,5 @@
 <?php
-namespace Gibbon\Module\ModuleName\Domain; //Replace ModuleName with your module's name, ommiting spaces
+namespace Gibbon\Module\NightCheck\Domain; //Replace ModuleName with your module's name, ommiting spaces
 
 use Gibbon\Domain\Traits\TableAware;
 use Gibbon\Domain\QueryCriteria;

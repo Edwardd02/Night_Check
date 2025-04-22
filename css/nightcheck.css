@@ -1,0 +1,364 @@
+/* ==========================================================================
+   General Styles
+   ========================================================================== */
+/* Base styles for the entire page */
+body {
+    font-family: Arial, sans-serif; /* Sets the default font to Arial or a sans-serif fallback */
+    margin: 20px;                  /* Adds 20px of margin around all sides of the body */
+    background-color: #f4f4f9;     /* Sets the background color to a light grey */
+    color: #333;                   /* Sets the default text color to a dark grey */
+}
+
+/* Styles for the main heading (H1) */
+h1 {
+    color: #333;                   /* Sets the heading text color to dark grey */
+    margin-bottom: 20px;           /* Adds 20px of margin below the main heading */
+    font-size: 2em;                /* Sets the font size of the main heading to twice the base font size */
+}
+
+/* ==========================================================================
+   Table Styles
+   ========================================================================== */
+
+/* Base styles for the table */
+table {
+    width: 100%;                   /* Makes the table take up 100% of its container's width */
+    border-collapse: collapse;     /* Merges adjacent cell borders into a single border */
+    margin-top: 20px;              /* Adds 20px of margin above the table */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Adds a subtle box shadow for a visual lift */
+    background-color: white;       /* Sets the table's background color to white */
+    border-radius: 8px;            /* Rounds the corners of the table by 8 pixels */
+    overflow: hidden;              /* Hides any content that overflows the rounded corners */
+    table-layout: fixed;           /* Makes the table layout fixed, cell widths can be set */
+}
+
+/* Styles for table header (th) and data (td) cells */
+.nightcheck-th {
+    border: 1px solid #ddd;        /* Adds a light grey 1px border to all table header and data cells */
+    padding: 0 10px;            /* Adds 12px of top/bottom padding and 15px of left/right padding inside cells */
+    text-align: center;              /* Aligns the text within table header and data cells to the left */
+
+
+}
+
+/* Specific styles for table header cells (th) */
+.nightcheck-th {
+    border: 1px solid #ddd;        /* Adds a light grey 1px border to all table header and data cells */
+    padding: 10px 10px;            /* Adds 12px of top/bottom padding and 15px of left/right padding inside cells */
+    text-align: center;              /* Aligns the text within table header and data cells to the left */
+    background-color: #0874c4;     /* Sets the background color of table header cells to blue */
+    color: white;                  /* Sets the text color of table header cells to white */
+    font-weight: bold;             /* Makes the text in table header cells bold */
+    position: relative;            /* Sets the positioning context to relative for absolute positioning of child elements (like the sort icon) */
+    cursor: pointer;               /* Changes the cursor to a pointer on hover, indicating interactivity (sorting) */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Adds a smooth transition effect for background color and text color changes */
+    word-break: break-word; /* Breaks long words onto the next line */
+    white-space: normal;    /* Prevents the text from wrapping to the next line */
+
+
+}
+
+/* Hover state for table header cells */
+.nightcheck-th:hover {
+    background-color: #065f9e; /* Sets a slightly darker blue background color on hover for table header cells */
+    color: #fff;                   /* Ensures the text remains white on hover for table header cells */
+}
+
+/* Styles for the sortable indicator icon (default state) */
+.nightcheck-th.sortable::after {
+    content: "⇅";                 /* Sets the content to an up-down arrow character */
+    font-size: 12px;               /* Sets the font size of the sort icon to 12 pixels */
+    margin-left: 5px;              /* Adds 5px of left margin between the header text and the icon */
+    opacity: 0.7;                  /* Sets the opacity of the sort icon to 0.7 (slightly transparent) */
+    position: absolute;            /* Positions the sort icon absolutely within the relative positioned th element */
+    right: 10px;                   /* Positions the sort icon 10px from the right edge of the th element */
+    top: 50%;                      /* Vertically centers the sort icon within the th element */
+    transform: translateY(-50%);   /* Fine-tunes the vertical centering of the sort icon */
+}
+
+/* Styles for header when sorted in ascending order */
+.nightcheck-th.sort-asc {
+    background-color: #0874c4;     /* Keeps the blue background color when sorted ascending */
+}
+
+/* Styles for the sort icon when sorted ascending */
+.nightcheck-th.sort-asc::after {
+    content: "↑";                 /* Changes the sort icon to an upward arrow */
+    opacity: 1;                    /* Makes the sort icon fully opaque */
+}
+
+/* Styles for header when sorted in descending order */
+.nightcheck-th.sort-desc {
+    background-color: #0874c4;     /* Keeps the blue background color when sorted descending */
+}
+
+/* Styles for the sort icon when sorted descending */
+.nightcheck-th.sort-desc::after {
+    content: "↓";                 /* Changes the sort icon to a downward arrow */
+    opacity: 1;                    /* Makes the sort icon fully opaque */
+}
+
+/* Alternating row colors (zebra striping) for better readability */
+tr:nth-child(even) {
+    background-color: #f9f9f9;     /* Sets a light grey background color for even-numbered table rows */
+}
+
+/* Hover effect for table rows */
+tr:hover {
+    background-color: #f1f1f1;     /* Sets a slightly darker grey background color on hover for table rows */
+}
+
+/* ==========================================================================
+   Form Element Styles
+   ========================================================================== */
+
+/* Container for form elements, allowing horizontal scroll if needed */
+.form-container {
+    margin-top: 20px;              /* Adds 20px of margin above the form container */
+    overflow-x: auto;              /* Allows horizontal scrolling if the content of the form container overflows horizontally */
+}
+
+/* Styles for select dropdown elements */
+select {
+    padding: 8px 12px;             /* Adds 8px of top/bottom and 12px of left/right padding inside the select box */
+    border: 1px solid #ddd;        /* Adds a light grey 1px border to the select box */
+    border-radius: 4px;            /* Rounds the corners of the select box by 4 pixels */
+    background-color: white;       /* Sets the background color of the select box to white */
+    width: auto;                   /* Makes the select box take up 100% of its container's width */
+    box-sizing: border-box;        /* Includes padding and border in the total width of the select box */
+    font-size: 14px;               /* Sets the font size of the text within the select box */
+    transition: border-color 0.3s ease; /* Adds a smooth transition effect for border color changes */
+    z-index: 10;
+}
+
+/* Focus state for select dropdown elements */
+select:focus {
+    border-color: #0874c4;         /* Sets the border color to blue when the select box is focused */
+    outline: none;                 /* Removes the default browser outline on focus */
+}
+select:hover {
+    cursor: pointer;
+}
+/* ==========================================================================
+   Button Styles
+   ========================================================================== */
+
+/* Styles for the 'Quick Date' buttons */
+.quick-date-btn {
+    padding: 10px 15px;            /* Adds 10px of top/bottom and 15px of left/right padding inside the button */
+    background-color: #009688;     /* Sets the background color of the button to teal */
+    color: white;                  /* Sets the text color of the button to white */
+    border: none;                  /* Removes the border from the button */
+    border-radius: 4px;            /* Rounds the corners of the button by 4 pixels */
+    font-size: 14px;               /* Sets the font size of the text within the button */
+    cursor: pointer;               /* Changes the cursor to a pointer on hover, indicating it's clickable */
+    margin: 5px;                   /* Adds 5px of margin around the button */
+    transition: background-color 0.3s ease; /* Adds a smooth transition effect for background color changes */
+}
+
+/* Hover state for 'Quick Date' buttons */
+.quick-date-btn:hover {
+    background-color: #00796b;     /* Sets a darker teal background color on hover for the button */
+}
+
+/* Styles for the 'Bulk Action' buttons */
+.bulk-btn {
+    padding: 10px 15px;            /* Adds 10px of top/bottom and 15px of left/right padding inside the button */
+    background-color: #45a049;     /* Sets the background color of the button to green */
+    color: white;                  /* Sets the text color of the button to white */
+    border: none;                  /* Removes the border from the button */
+    border-radius: 4px;            /* Rounds the corners of the button by 4 pixels */
+    font-size: 14px;               /* Sets the font size of the text within the button */
+    cursor: pointer;               /* Changes the cursor to a pointer on hover, indicating it's clickable */
+    margin: 5px;                   /* Adds 5px of margin around the button */
+    transition: background-color 0.3s ease; /* Adds a smooth transition effect for background color changes */
+}
+.bulk-btn:hover {
+    background-color: #3a8a40;     /* Sets a darker green background color on hover for the button */
+}
+
+/* Styles for the 'Date Action' buttons */
+.date-submit-btn {
+    padding: 10px 15px;            /* Adds 10px of top/bottom and 15px of left/right padding inside the button */
+    background-color: #C70039;     /* Sets the background color of the button to teal */
+    color: white;                  /* Sets the text color of the button to white */
+    border: none;                  /* Removes the border from the button */
+    border-radius: 4px;            /* Rounds the corners of the button by 4 pixels */
+    font-size: 14px;               /* Sets the font size of the text within the button */
+    cursor: pointer;               /* Changes the cursor to a pointer on hover, indicating it's clickable */
+    margin: 5px;                   /* Adds 5px of margin around the button */
+    transition: background-color 0.3s ease; /* Adds a smooth transition effect for background color changes */
+}
+
+/* Hover state for 'Quick Date' buttons */
+.date-submit-btn:hover {
+    background-color: #972f19;     /* Sets a darker teal background color on hover for the button */
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+/* Styles applied on screens smaller than 768px (tablets and phones) */
+@media (max-width: 768px) {
+    /* Reduce padding in table cells for smaller screens */
+    th, td {
+        padding: 8px 10px;         /* Reduces the padding inside table header and data cells for smaller screens */
+    }
+
+    /* Adjust position of sort icon on smaller screens */
+    th.sortable::after {
+        right: 5px;                /* Moves the sort icon closer to the right edge on smaller screens */
+    }
+
+    /* Make the submit button (if present with this class) full width */
+    .submit-btn { /* Note: .submit-btn was not defined in the original CSS, but included in media query */
+        width: 100%;               /* Makes any button with the class 'submit-btn' take up the full width on smaller screens */
+    }
+
+    /* Adjust quick date buttons for better layout on small screens */
+    .quick-date-btn {
+        width: 48%;                /* Makes the quick date buttons roughly half the width of their container */
+        margin: 5px 1%;            /* Adjusts the margin around quick date buttons for a side-by-side layout */
+    }
+
+    /* Make bulk action buttons full width */
+    .bulk-btn {
+        width: 100%;               /* Makes the bulk action buttons take up the full width of their container */
+        margin: 5px 0;             /* Adjusts the margin around bulk action buttons for a full-width layout */
+    }
+}
+
+/* ==========================================================================
+   Input and Specific Table Column Styles
+   ========================================================================== */
+
+/* Target all input elements with type="date" */
+input[type="date"] {
+    padding: 8px 12px;             /* Adds padding inside the date input field */
+    border: 1px solid #ccc;        /* Defines a grey border for the date input field */
+    border-radius: 4px;            /* Rounds the corners of the date input field */
+    font-size: 14px;               /* Sets the font size for the text in the date input field */
+    background-color: white;       /* Sets a white background color for the date input field */
+    color: #333;                   /* Sets the text color for the date input field */
+    width: 200px;                  /* Sets a specific width for the date input field */
+    box-sizing: border-box;        /* Ensures padding and border are included in the element's total width */
+    cursor: pointer;               /* Changes the cursor to a pointer on hover for the date input field */
+}
+
+/* Style the focus state */
+input[type="date"]:focus {
+    border-color: #0874c4;         /* Changes the border color to blue when the date input field is focused */
+    outline: none;                 /* Removes the default browser outline on focus */
+    box-shadow: 0 0 3px rgba(8, 116, 196, 0.5); /* Adds a subtle blue glow around the date input field on focus */
+}
+
+/* Styles for the attendance select dropdown */
+.attendance-select {
+    padding: 8px 12px;             /* Adds padding inside the attendance select dropdown */
+    border: 1px solid #ccc;        /* Defines a grey border for the attendance select dropdown */
+    border-radius: 4px;            /* Rounds the corners of the attendance select dropdown */
+}
+
+/* Style the select box based on the selected value for 'Present' */
+.present {
+    background-color: #d4edda; /* Light green background */
+    border-color: #c3e6cb;      /* Light green border */
+    color: #155724;            /* Dark green text */
+}
+
+/* Style the select box based on the selected value for 'Absent' */
+.absent {
+    background-color: #f8d7da; /* Light red background */
+    border-color: #f5c6cb;      /* Light red border */
+    color: #721c24;            /* Dark red text */
+}
+
+/* Style the select box based on the selected value for 'Late' */
+.late {
+    background-color: #fff3cd; /* Light yellow background */
+    border-color: #ffeeba;      /* Light yellow border */
+    color: #856404;            /* Dark yellow text */
+}
+
+/* Style the select box based on the selected value for 'None' or null */
+.null {
+    background-color: #e2e3e5; /* Light gray background */
+    border-color: #d6d8db;      /* Light gray border */
+    color: #6c757d;            /* Medium gray text */
+}
+
+/* Style for the 'Student Name' table data cell to handle overflow */
+#studentName {
+    width: 200px; /* Sets a maximum width */
+}
+
+/* Style for the 'Gender' table data cell to handle overflow */
+#gender {
+
+    width: 80px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'Grade' table data cell to center text */
+#grade {
+    width: 80px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'Dorm Room' table data cell to align text to the left */
+#dormRoom {
+    width: 100px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'House' table data cell (currently no specific styling) */
+#house {
+    width: 80px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'Advisor' table data cell to align text to the left */
+#advisor {
+    width: 200px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'Out Of School' table data cell to center text */
+#outOfSchool {
+    width: 50px; /* Sets a maximum width */
+
+}
+
+/* Style for the 'Attendance' table data cell to center text */
+#attendance {
+    width: 100px; /* Sets a maximum width */
+
+}
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification.success {
+    background-color: #4CAF50;
+}
+
+.notification.error {
+    background-color: #F44336;
+}
