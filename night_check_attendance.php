@@ -5,6 +5,20 @@ if (isset($_GET['date'])) {
     $selected_date = $_GET['date'];
 
 }
+use Gibbon\Forms\Form;
+use Gibbon\Forms\DatabaseFormFactory;
+
+//Module includes
+include './modules/'.$session->get('module').'/moduleFunctions.php';
+
+if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_attendance.php') == false) {
+    //Acess denied
+    $page->addError(__m('You do not have access to this action.'));
+} else {
+$page->breadcrumbs
+    ->add(__m('Night Check Attendance'), 'night_check_attendance.php')
+    ->add(__m('Add'));
+}
 
 $students = null
 ?>
