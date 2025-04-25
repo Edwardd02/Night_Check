@@ -1,26 +1,51 @@
 <?php
-$selected_date = date('Y-m-d');
-if (isset($_GET['date'])) {
-    // Process the date manually
-    $selected_date = $_GET['date'];
+// MUST BE AT THE VERY TOP - ABSOLUTELY CRUCIAL FOR GIBBON
+include __DIR__.'/gibbon.php'; // Adjust path according to your file structure
 
-}
-use Gibbon\Forms\Form;
-use Gibbon\Forms\DatabaseFormFactory;
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
-//Module includes
-include './modules/'.$session->get('module').'/moduleFunctions.php';
+// Module includes
+include __DIR__.'/moduleFunctions.php'; // Adjust path as needed
 
 if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_attendance.php') == false) {
-    //Acess denied
-    $page->addError(__m('You do not have access to this action.'));
+    $page->addError(__('You do not have access to this action.'));
 } else {
-$page->breadcrumbs
-    ->add(__m('Night Check Attendance'), 'night_check_attendance.php')
-    ->add(__m('Add'));
-}
+    // Proceed with corrected code
+    $page->breadcrumbs->add(__('Night Check Attendance'), 'night_check_attendance.php')->add(__('Add'));
 
-$students = null
+    $selected_date = $_GET['date'] ?? date('Y-m-d');
+
+    // CORRECTED SQL QUERY WITH NAME CONCAT
+    $sql = "SELECT 
+                gibbonPerson.gibbonPersonID as id,
+                CONCAT(gibbonPerson.surname, ', ', gibbonPerson.preferredName) as name,
+                gibbonPerson.gender,
+                gibbonYearGroup.name as grade,
+                gibbonPerson.lockerNumber as dorm_room,
+                gibbonHouse.name as house,
+                NULL as advisor,
+                NULL as out_of_school,  
+                NULL as attendance     
+            FROM gibbonPerson
+            JOIN gibbonStudentEnrolment ON gibbonStudentEnrolment.gibbonPersonID=gibbonPerson.gibbonPersonID
+            LEFT JOIN gibbonYearGroup ON gibbonYearGroup.gibbonYearGroupID=gibbonStudentEnrolment.gibbonYearGroupID
+            LEFT JOIN gibbonHouse ON gibbonHouse.gibbonHouseID=gibbonPerson.gibbonHouseID
+            WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:schoolYearID
+            AND gibbonPerson.status='Full'
+            ORDER BY gibbonPerson.surname, gibbonPerson.preferredName";
+
+    try {
+        $result = $connection2->prepare($sql);
+        $result->execute(['schoolYearID' => $session->get('gibbonSchoolYearID')]);
+        $students = $result->fetchAll();
+
+        // DEBUG: Check retrieved data
+        // var_dump($students); exit();
+    } catch (PDOException $e) {
+        $page->addError(__('Database error:').' '.$e->getMessage());
+    }
+}
 ?>
 
 <!DOCTYPE html>
