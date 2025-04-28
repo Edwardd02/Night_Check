@@ -15,36 +15,32 @@ if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_at
     $page->breadcrumbs->add(__('Night Check Attendance'), 'night_check_attendance.php')->add(__('Add'));
 
     $selected_date = $_GET['date'] ?? date('Y-m-d');
-
+    // status should be 'Full'
     // CORRECTED SQL QUERY WITH NAME CONCAT
     $sql = "SELECT 
-                gibbonPerson.gibbonPersonID as id,
-                CONCAT(gibbonPerson.surname, ', ', gibbonPerson.preferredName) as name,
-                gibbonPerson.gender,
-                gibbonYearGroup.name as grade,
-                gibbonPerson.lockerNumber as dorm_room,
-                gibbonHouse.name as house,
-                NULL as advisor,
-                NULL as out_of_school,  
-                NULL as attendance     
-            FROM gibbonPerson
-            JOIN gibbonStudentEnrolment ON gibbonStudentEnrolment.gibbonPersonID=gibbonPerson.gibbonPersonID
-            LEFT JOIN gibbonYearGroup ON gibbonYearGroup.gibbonYearGroupID=gibbonStudentEnrolment.gibbonYearGroupID
-            LEFT JOIN gibbonHouse ON gibbonHouse.gibbonHouseID=gibbonPerson.gibbonHouseID
-            WHERE gibbonStudentEnrolment.gibbonSchoolYearID=:schoolYearID
-            AND gibbonPerson.status='Full'
-            ORDER BY gibbonPerson.surname, gibbonPerson.preferredName";
+            gibbonPerson.gibbonPersonID as id,
+            CONCAT(gibbonPerson.surname, ', ', gibbonPerson.preferredName) as name,
+            gibbonPerson.gender as gender,
+            gibbonPerson.lockerNumber as dorm_room,
+            gibbonHouse.name as house,
+            null as advisor,
+            null as out_of_school,
+            null as attendance
+        FROM gibbonPerson
+        LEFT JOIN gibbonHouse ON gibbonHouse.gibbonHouseID = gibbonPerson.gibbonHouseID
+        LEFT JOIN gibbonRole ON gibbonPerson.gibbonRoleIDPrimary = gibbonRole.gibbonRoleID
+        WHERE gibbonRole.name = 'Student'
+        ORDER BY gibbonPerson.surname, gibbonPerson.preferredName";
 
     try {
         $result = $connection2->prepare($sql);
-        $result->execute(['schoolYearID' => $session->get('gibbonSchoolYearID')]);
+        $result->execute();
         $students = $result->fetchAll();
 
-        // DEBUG: Check retrieved data
-        // var_dump($students); exit();
     } catch (PDOException $e) {
         $page->addError(__('Database error:').' '.$e->getMessage());
     }
+
 }
 ?>
 
