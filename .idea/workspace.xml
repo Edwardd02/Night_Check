@@ -4,9 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="97088a73-6aed-4f04-8567-f401c1c59faa" name="Changes" comment="">
+    <list default="true" id="97088a73-6aed-4f04-8567-f401c1c59faa" name="Changes" comment="imported actual student data, updated sql">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/night_check_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/night_check_attendance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGEDB.php" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGEDB.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGELOG.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CHANGELOG.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manifest.php" beforeDir="false" afterPath="$PROJECT_DIR$/manifest.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,11 +76,32 @@
       <workItem from="1745287420886" duration="859000" />
       <workItem from="1745374280138" duration="1695000" />
       <workItem from="1745542577487" duration="2250000" />
-      <workItem from="1745807090665" duration="3613000" />
+      <workItem from="1745807090665" duration="5079000" />
     </task>
+    <task id="LOCAL-00001" summary="imported actual student data, updated sql">
+      <option name="closed" value="true" />
+      <created>1745810842326</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1745810842327</updated>
+    </task>
+    <task id="LOCAL-00002" summary="imported actual student data, updated sql">
+      <option name="closed" value="true" />
+      <created>1745810864155</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1745810864155</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="imported actual student data, updated sql" />
+    <option name="LAST_COMMIT_MESSAGE" value="imported actual student data, updated sql" />
   </component>
 </project>

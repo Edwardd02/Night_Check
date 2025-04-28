@@ -10,7 +10,7 @@ $description = 'Night check system for UWC CSC';
 $entryURL    = 'night_check_attendance.php';
 $type        = 'Additional';
 $category    = 'People';
-$version     = '0.0.31';       // Use proper version format
+$version     = '0.0.4';       // Use proper version format
 $author      = 'Renxuan Yao';
 $url         = 'https://renxuanyao.github.io/';
 

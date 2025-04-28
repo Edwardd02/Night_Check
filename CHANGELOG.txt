@@ -16,3 +16,7 @@ got student data.
 v0.0.31
 -------
 imported actual student data.
+
+v0.0.4
+-------
+added gibbonNightCheck database table
