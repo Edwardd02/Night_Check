@@ -1,9 +1,8 @@
 <?php
-// MUST BE AT THE VERY TOP - ABSOLUTELY CRUCIAL FOR GIBBON
 include __DIR__.'/gibbon.php'; // Adjust path according to your file structure
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', 1);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 // Module includes
 include __DIR__.'/moduleFunctions.php'; // Adjust path as needed
@@ -23,24 +22,39 @@ if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_at
             gibbonPerson.gender as gender,
             gibbonPerson.lockerNumber as dorm_room,
             gibbonHouse.name as house,
-            null as advisor,
-            null as out_of_school,
-            null as attendance
+            null as advisor
         FROM gibbonPerson
         LEFT JOIN gibbonHouse ON gibbonHouse.gibbonHouseID = gibbonPerson.gibbonHouseID
         LEFT JOIN gibbonRole ON gibbonPerson.gibbonRoleIDPrimary = gibbonRole.gibbonRoleID
         WHERE gibbonRole.name = 'Student'
         ORDER BY gibbonPerson.surname, gibbonPerson.preferredName";
 
-    try {
-        $result = $connection2->prepare($sql);
-        $result->execute();
-        $students = $result->fetchAll();
+    $result = $connection2->prepare($sql);
+    $result->execute();
+    $students = $result->fetchAll();
+    $attendance_data = [];
 
-    } catch (PDOException $e) {
-        $page->addError(__('Database error:').' '.$e->getMessage());
+    // Corrected attendance query using PDO
+    $attendance_query = $connection2->prepare("SELECT 
+        gibbonPersonID, 
+        attendance as attendance_status, 
+        COALESCE(out_of_school, 'No') AS out_of_school 
+        FROM gibbonNightCheck WHERE date = ?");
+    $attendance_query->execute([$selected_date]);
+    $attendance_results = $attendance_query->fetchAll();
+
+    foreach ($attendance_results as $row) {
+        $attendance_data[$row['gibbonPersonID']] = [
+            'attendance_status' => $row['attendance_status'],
+            'out_of_school' => $row['out_of_school']
+        ];
     }
 
+    foreach ($students as &$student) {
+        $student_id = $student['id'];
+        $student['attendance'] = $attendance_data[$student_id]['attendance_status'] ?? 'None';
+        $student['out_of_school'] = $attendance_data[$student_id]['out_of_school'] ?? 'No';
+    }
 }
 ?>
 
