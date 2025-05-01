@@ -35,7 +35,7 @@ document.querySelectorAll('.attendance-select').forEach(select => {
         this.className = `attendance-select ${this.value.toLowerCase()}`;
 
         // Send update to server to save the attendance status
-        fetch('save_attendance.php', {
+        fetch('/modules/Night Check/save_attendance.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,19 +74,14 @@ async function setAll(status) {
         // Store original values
         document.querySelectorAll('.attendance-select').forEach(select => {
             select.dataset.originalValue = select.value;
-        });
-
-        // Update UI immediately
-        document.querySelectorAll('.attendance-select').forEach(select => {
             select.value = status;
             select.className = `attendance-select ${status.toLowerCase()}`;
         });
 
+        // Send request
         const response = await fetch('/modules/Night Check/bulk_attendance.php', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 student_ids: students,
                 date_id: dateId,
@@ -95,25 +90,15 @@ async function setAll(status) {
         });
 
         // Handle response
-        const text = await response.text();
-        let data;
-
-        try {
-            data = JSON.parse(text);
-        } catch (e) {
-            throw new Error(`Invalid server response: ${text.slice(0, 100)}`);
-        }
-
-        if (!data.success) {
-            throw new Error(data.error || 'Server error');
-        }
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error || 'Server error');
 
         showNotification(`Saved ${data.count} records successfully!`, true);
 
     } catch (error) {
         console.error('Error:', error);
 
-        // Revert UI on failure
+        // Revert UI changes
         document.querySelectorAll('.attendance-select').forEach(select => {
             select.value = select.dataset.originalValue;
             select.className = `attendance-select ${select.dataset.originalValue.toLowerCase()}`;

@@ -20,6 +20,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_at
             gibbonPerson.gender as gender,
             gibbonPerson.lockerNumber as dorm_room,
             gibbonHouse.name as house,
+            null as grade,
             null as advisor
         FROM gibbonPerson
         LEFT JOIN gibbonHouse ON gibbonHouse.gibbonHouseID = gibbonPerson.gibbonHouseID
@@ -40,16 +41,19 @@ if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_at
         FROM gibbonNightCheck WHERE date = ?");
     $attendance_query->execute([$selected_date]);
     $attendance_results = $attendance_query->fetchAll();
-
+    // In your attendance data processing:
     foreach ($attendance_results as $row) {
-        $attendance_data[$row['gibbonPersonID']] = [
+        // Convert numeric ID to zero-padded string format
+        $studentID = str_pad($row['gibbonPersonID'], 10, '0', STR_PAD_LEFT);
+        $attendance_data[$studentID] = [
             'attendance_status' => $row['attendance_status'],
             'out_of_school' => $row['out_of_school']
         ];
     }
 
+// In your student data merge:
     foreach ($students as &$student) {
-        $student_id = $student['id'];
+        $student_id = $student['id']; // Already in 0000002774 format
         $student['attendance'] = $attendance_data[$student_id]['attendance_status'] ?? 'None';
         $student['out_of_school'] = $attendance_data[$student_id]['out_of_school'] ?? 'No';
     }
@@ -109,7 +113,7 @@ if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_at
                 <td><?php echo htmlspecialchars($student['out_of_school'] ?? ''); ?></td>
                 <td>
                     <select name="attendance[<?php echo $student['id']; ?>]"
-                            class="attendance-select <?php echo strtolower($student['attendance']); ?>"
+                            class="attendance-select <?php echo strtolower($student['attendance'] ?? 'none'); ?>"
                             data-student-id="<?php echo $student['id']; ?>"
                             data-student-name="<?php echo $student['name']; ?>">
                         <option value="" class="null" hidden <?php echo !isset($student['attendance']) ? 'selected' : ''; ?>>

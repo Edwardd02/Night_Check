@@ -31,3 +31,7 @@ $sql[$count][1] = "CREATE TABLE gibbonNightCheck (
     PRIMARY KEY (gibbonPersonID, date),
     FOREIGN KEY (gibbonPersonID) REFERENCES gibbonPerson(gibbonPersonID) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;";
+
+$count++;
+$sql[$count][0] = "0.1.0";
+$sql[$count][1] = "";
