@@ -65,24 +65,24 @@ document.querySelectorAll('.attendance-select').forEach(select => {
             });
     });
 });
-
-// Function to set the same attendance status for all students
 async function setAll(status) {
-    // Get the IDs of all students from the attendance select elements
-    const students = Array.from(document.querySelectorAll('.attendance-select'))
-        .map(select => parseInt(select.dataset.studentId));
-    // Get the current date ID from the hidden input field
-    const dateId = document.querySelector('input[name="attendance_date"]').value;
-
     try {
-        // Update the UI first to provide immediate feedback to the user
+        const students = Array.from(document.querySelectorAll('.attendance-select'))
+            .map(select => parseInt(select.dataset.studentId));
+        const dateId = document.querySelector('input[name="attendance_date"]').value;
+
+        // Store original values
+        document.querySelectorAll('.attendance-select').forEach(select => {
+            select.dataset.originalValue = select.value;
+        });
+
+        // Update UI immediately
         document.querySelectorAll('.attendance-select').forEach(select => {
             select.value = status;
             select.className = `attendance-select ${status.toLowerCase()}`;
         });
 
-        // Send a bulk update request to the server
-        const response = await fetch('bulk_attendance.php', {
+        const response = await fetch('/modules/Night Check/bulk_attendance.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -94,21 +94,32 @@ async function setAll(status) {
             })
         });
 
-        // Parse the JSON response from the server
-        const data = await response.json();
-        // Handle the response data
+        // Handle response
+        const text = await response.text();
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch (e) {
+            throw new Error(`Invalid server response: ${text.slice(0, 100)}`);
+        }
+
         if (!data.success) {
-            console.error('Bulk update failed:', data.error);
-            showNotification("An error occurred while saving attendance, please contact support", false);
+            throw new Error(data.error || 'Server error');
         }
-        else
-        {
-            showNotification("Save successfully!", true);
-        }
+
+        showNotification(`Saved ${data.count} records successfully!`, true);
+
     } catch (error) {
-        // Handle any errors that occurred during the fetch request
-        console.error('Bulk update error:', error);
-        showNotification("An error occurred while saving attendance, please contact support", false);
+        console.error('Error:', error);
+
+        // Revert UI on failure
+        document.querySelectorAll('.attendance-select').forEach(select => {
+            select.value = select.dataset.originalValue;
+            select.className = `attendance-select ${select.dataset.originalValue.toLowerCase()}`;
+        });
+
+        showNotification(`Save failed: ${error.message}`, false);
     }
 }
 

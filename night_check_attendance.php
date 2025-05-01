@@ -1,6 +1,4 @@
 <?php
-include __DIR__.'/gibbon.php'; // Adjust path according to your file structure
-
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 

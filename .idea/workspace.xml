@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="97088a73-6aed-4f04-8567-f401c1c59faa" name="Changes" comment="imported actual student data, updated sql">
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bulk_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/bulk_attendance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/nightcheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/nightcheck.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/night_check_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/night_check_attendance.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,6 +80,9 @@
       <workItem from="1745807090665" duration="5079000" />
       <workItem from="1745891976070" duration="1033000" />
       <workItem from="1745893037359" duration="2339000" />
+      <workItem from="1745915254743" duration="661000" />
+      <workItem from="1745916571502" duration="1664000" />
+      <workItem from="1745976818146" duration="8532000" />
     </task>
     <task id="LOCAL-00001" summary="imported actual student data, updated sql">
       <option name="closed" value="true" />

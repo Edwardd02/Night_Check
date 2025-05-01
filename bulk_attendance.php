@@ -1,46 +1,90 @@
 <?php
-include __DIR__.'/gibbon.php';
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-include __DIR__.'/moduleFunctions.php';
+// Start output buffering immediately
+ob_start();
 
-if (isActionAccessible($guid, $connection2, '/modules/Night Check/night_check_attendance.php') == false) {
-    $page->addError(__('You do not have access to this action.'));
-} else {
-    // Process form submission
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        try {
-            $connection2->beginTransaction();
+// Set JSON header right away
+header('Content-Type: application/json');
 
-            // Prepare insert/update statement
-            $stmt = $connection2->prepare("
-                INSERT INTO gibbonNightCheck 
-                (gibbonPersonID, attendance, out_of_school, date) 
-                VALUES (:id, :status, 'No', :date)
-                ON DUPLICATE KEY UPDATE 
-                attendance = VALUES(attendance),
-                out_of_school = VALUES(out_of_school)
-            ");
+// Path to Gibbon core - verify this matches your server
+$pathToGibbon = '/var/www/gibbon.local/gibbon.php';
 
-            $date = $_POST['attendance_date'] ?? date('Y-m-d');
-            $attendanceData = $_POST['attendance'] ?? [];
-
-            foreach ($attendanceData as $studentID => $status) {
-                $stmt->execute([
-                    ':id'     => $studentID,
-                    ':status' => $status,
-                    ':date'   => $date
-                ]);
-            }
-
-            $connection2->commit();
-            $page->addMessage(__('Attendance records updated successfully.'));
-        } catch (PDOException $e) {
-            $connection2->rollBack();
-            $page->addError(__('Failed to update attendance: ').$e->getMessage());
-        }
+try {
+    // Verify Gibbon exists
+    if (!file_exists($pathToGibbon) || !is_readable($pathToGibbon)) {
+        throw new RuntimeException('Gibbon core not found');
     }
 
-}
-?>
+    // Include Gibbon
+    require_once $pathToGibbon;
 
+    // Get database connection
+    global $connection2;
+    try {
+        $test = $connection2->query("SELECT COUNT(*) FROM gibbonPerson");
+        error_log('Connection test: ' . $test->fetchColumn());
+    } catch (PDOException $e) {
+        error_log('CONNECTION FAILURE: ' . $e->getMessage());
+    }
+    // Force error reporting
+    $connection2->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Validate input
+    $input = json_decode(file_get_contents('php://input'), true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new RuntimeException('Invalid JSON input');
+    }
+
+    // Validate required fields
+    $required = ['student_ids', 'date_id', 'attendance_status'];
+    foreach ($required as $field) {
+        if (empty($input[$field])) {
+            throw new RuntimeException("Missing required field: $field");
+        }
+    }
+    error_log('===== STARTING BULK UPDATE =====');
+    error_log('Received input: ' . print_r($input, true));
+    // Prepare SQL
+    $sql = "INSERT INTO gibbonNightCheck 
+            (gibbonPersonID, date, attendance, out_of_school) 
+            VALUES (:student_id, :date, :status, 'No')
+            ON DUPLICATE KEY UPDATE 
+            attendance = VALUES(attendance)";
+
+    $stmt = $connection2->prepare($sql);
+
+    // Execute in transaction
+    $connection2->beginTransaction();
+
+    foreach ($input['student_ids'] as $student_id) {
+        error_log("Processing student ID: $student_id");
+
+        $result = $stmt->execute([
+            ':student_id' => $student_id,
+            ':date' => $input['date_id'],
+            ':status' => $input['attendance_status']
+        ]);
+
+        error_log("Execution result: " . ($result ? 'Success' : 'Failed'));
+        error_log("Last insert ID: " . $connection2->lastInsertId());
+    }
+
+    $connection2->commit();
+    error_log('Transaction committed successfully');
+    // Return success
+    ob_end_clean();
+    echo json_encode([
+        'success' => true,
+        'count' => count($input['student_ids'])
+    ]);
+
+} catch (Throwable $e) {
+    // Clean up and return error
+    ob_end_clean();
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+    error_log('Bulk Attendance Error: '.$e->getMessage());
+    exit;
+}
