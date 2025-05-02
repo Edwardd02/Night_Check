@@ -1,6 +1,8 @@
 <?php
 // Start output buffering and set JSON header
 ob_start();
+
+
 header('Content-Type: application/json');
 
 // Path configuration
