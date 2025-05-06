@@ -1,21 +1,18 @@
 // Function to navigate to a specific date
 function setDate(date) {
-    // Construct the proper Gibbon URL
+    // Update to new consolidated PHP file
     const baseUrl = window.location.href.split('?')[0];
-    window.location.href = `${baseUrl}?q=/modules/Night+Check/night_check_attendance.php&date=${date}`;
+    window.location.href = `${baseUrl}?q=/modules/Night+Check/nightcheck.php&date=${date}`;
 }
 
-// Notification system
+// Notification system (unchanged)
 function showNotification(message, isSuccess) {
     const notification = document.createElement('div');
     notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
     notification.textContent = message;
     document.body.appendChild(notification);
 
-    // Trigger animation
     setTimeout(() => notification.classList.add('show'), 10);
-
-    // Auto-remove after 3 seconds
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
@@ -25,50 +22,43 @@ function showNotification(message, isSuccess) {
 // Event listener for individual attendance select changes
 document.querySelectorAll('.attendance-select').forEach(select => {
     select.addEventListener('change', function() {
-        // Get required data from the select element's attributes and the hidden date input
         const studentId = this.dataset.studentId;
-        const studentName = this.dataset.studentName;
         const dateId = document.querySelector('input[name="attendance_date"]').value;
         const attendanceStatus = this.value;
 
-        // Update visual state of the select element based on the selected value
         this.className = `attendance-select ${this.value.toLowerCase()}`;
 
-        // Send update to server to save the attendance status
-        fetch('/modules/Night Check/save_attendance.php', {
+        // Updated endpoint with action parameter
+        fetch('/modules/Night Check/night_check_attendance.php?action=single', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 student_id: studentId,
-                student_name: studentName,
                 date_id: dateId,
                 attendance_status: attendanceStatus
             })
         })
             .then(response => response.json())
             .then(data => {
-                // Handle the response from the server
                 if (!data.success) {
                     console.error('Error saving attendance:', data.error);
-                    showNotification("An error occurred while saving attendance, please contact support", false);
-                }
-                else{
-                    showNotification("Save successfully!", true);
+                    showNotification(data.error || "An error occurred", false);
+                } else {
+                    showNotification("Saved successfully!", true);
                 }
             })
             .catch(error => {
-                // Handle any errors that occurred during the fetch request
                 console.error('Error:', error);
-                showNotification("An error occurred while saving attendance, please contact support", false);
+                showNotification("Network error - please try again", false);
             });
     });
 });
+
+// Bulk update function
 async function setAll(status) {
     try {
         const students = Array.from(document.querySelectorAll('.attendance-select'))
-            .map(select => parseInt(select.dataset.studentId));
+            .map(select => select.dataset.studentId);
         const dateId = document.querySelector('input[name="attendance_date"]').value;
 
         // Store original values
@@ -78,8 +68,8 @@ async function setAll(status) {
             select.className = `attendance-select ${status.toLowerCase()}`;
         });
 
-        // Send request
-        const response = await fetch('/modules/Night Check/bulk_attendance.php', {
+        // Updated endpoint with action parameter
+        const response = await fetch('/modules/Night Check/night_check_attendance.php?action=bulk', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -88,27 +78,30 @@ async function setAll(status) {
                 attendance_status: status
             })
         });
-
-        // Handle response
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const text = await response.text();
+            throw new Error(`Invalid response: ${text.substring(0, 100)}`);
+        }
         const data = await response.json();
         if (!data.success) throw new Error(data.error || 'Server error');
 
-        showNotification(`Saved ${data.count} records successfully!`, true);
+        showNotification(`Saved ${data.count} records!`, true);
 
     } catch (error) {
         console.error('Error:', error);
-
-        // Revert UI changes
+        // Revert UI changes with null check
         document.querySelectorAll('.attendance-select').forEach(select => {
-            select.value = select.dataset.originalValue;
-            select.className = `attendance-select ${select.dataset.originalValue.toLowerCase()}`;
+            if (select.dataset.originalValue) {
+                select.value = select.dataset.originalValue;
+                select.className = `attendance-select ${select.dataset.originalValue.toLowerCase()}`;
+            }
         });
-
         showNotification(`Save failed: ${error.message}`, false);
     }
 }
 
-// Function to sort a table by a specific column
+// Sort function (unchanged)
 function sortTable(columnIndex, dataType) {
     const table = document.querySelector('table');
     const tbody = table.querySelector('tbody');
@@ -116,38 +109,23 @@ function sortTable(columnIndex, dataType) {
     const header = table.querySelectorAll('th')[columnIndex];
     const isAsc = header.classList.contains('sort-asc');
 
-    // Remove all sorting classes from all headers
-    table.querySelectorAll('th').forEach(th => {
-        th.classList.remove('sort-asc', 'sort-desc');
-    });
+    table.querySelectorAll('th').forEach(th => th.classList.remove('sort-asc', 'sort-desc'));
 
-    // Sort the rows based on the specified column and data type
     rows.sort((a, b) => {
         const aValue = a.cells[columnIndex].textContent.trim();
         const bValue = b.cells[columnIndex].textContent.trim();
-
-        if (dataType === 'number') {
-            return isAsc
-                ? parseInt(aValue) - parseInt(bValue)
-                : parseInt(bValue) - parseInt(aValue);
-        } else {
-            return isAsc
-                ? aValue.localeCompare(bValue)
-                : bValue.localeCompare(aValue);
-        }
+        return dataType === 'number'
+            ? (isAsc ? parseInt(aValue) - parseInt(bValue) : parseInt(bValue) - parseInt(aValue))
+            : (isAsc ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue));
     });
 
-    // Re-append the sorted rows to the table body
     rows.forEach(row => tbody.appendChild(row));
-
-    // Update the class of the clicked header to indicate the sorting direction
     header.classList.add(isAsc ? 'sort-desc' : 'sort-asc');
 }
 
-// Event listener to add the 'sortable' class to table headers with an onclick attribute after the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    const headers = document.querySelectorAll('th[onclick]');
-    headers.forEach(header => {
+// DOMContentLoaded listener (unchanged)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('th[onclick]').forEach(header => {
         header.classList.add('sortable');
     });
 });

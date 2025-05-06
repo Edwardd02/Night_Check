@@ -6,7 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="97088a73-6aed-4f04-8567-f401c1c59faa" name="Changes" comment="a working version of bulk_attendance.php">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bulk_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/bulk_attendance.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/nightcheck.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/nightcheck.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/night_check_attendance.php" beforeDir="false" afterPath="$PROJECT_DIR$/night_check_attendance.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,6 +84,9 @@
       <workItem from="1746065898233" duration="3435000" />
       <workItem from="1746153324432" duration="1388000" />
       <workItem from="1746160983412" duration="315000" />
+      <workItem from="1746412789727" duration="1635000" />
+      <workItem from="1746493841375" duration="305000" />
+      <workItem from="1746495359399" duration="2709000" />
     </task>
     <task id="LOCAL-00001" summary="imported actual student data, updated sql">
       <option name="closed" value="true" />
